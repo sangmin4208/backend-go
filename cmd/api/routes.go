@@ -1,12 +1,16 @@
 package main
 
-import "github.com/julienschmidt/httprouter"
+import (
+	"net/http"
 
-func (app *application) routes() *httprouter.Router {
+	"github.com/julienschmidt/httprouter"
+)
+
+func (app *application) routes() http.Handler {
 	router := httprouter.New()
 	router.HandlerFunc("GET", "/status", app.statusHandler)
 
 	router.HandlerFunc("GET", "/v1/movie/:id", app.getOneMovie)
 	router.HandlerFunc("GET", "/v1/movie", app.getAllMovies)
-	return router
+	return app.enableCORS(router)
 }
